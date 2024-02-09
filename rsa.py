@@ -1,0 +1,55 @@
+import sys
+import time
+from math import sqrt, ceil
+
+def is_prime(n):
+    if n < 2:
+        return False
+    for i in range(2, int(sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+
+def factor_rsa_number(n):
+    factors = []
+    while n % 2 == 0:
+        factors.append(2)
+        n //= 2
+    i = 3
+    while i <= sqrt(n):
+        if n % i == 0:
+            factors.append(i)
+            n //= i
+        else:
+            i += 2
+    if n > 2:
+        factors.append(n)
+    if len(factors) == 1:
+        p = factors[0]
+        q = n // p
+        return (p, q)
+    else:
+        pq = []
+        for factor in factors:
+            if is_prime(factor):
+                pq.append(factor)
+            else:
+                p, q = factor_rsa_number(factor)
+                pq.append(p)
+                pq.append(q)
+        return tuple(pq)
+
+input_file = sys.argv[1]
+
+with open(input_file, 'r') as f:
+    rsa_numbers = [int(line.strip()) for line in f.readlines()]
+
+start_time = time.time()
+for n in rsa_numbers:
+    p, q = factor_rsa_number(n)
+    print(f"{n}={q}*{p}")
+end_time = time.time()
+exec_time = end_time - start_time
+print("Total execution time: ", exec_time, " seconds")
+
