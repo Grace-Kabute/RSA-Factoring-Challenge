@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 import sys
 import time
 from math import sqrt, ceil
